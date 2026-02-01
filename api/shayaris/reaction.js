@@ -1,5 +1,5 @@
-import { connectDB } from "../../../_lib/db.js";
-import Shayari from "../../../_lib/models/Shayari.js";
+import { connectDB } from "../../_lib/db.js";
+import Shayari from "../../_lib/models/Shayari.js";
 
 export default async function handler(req, res) {
   try {

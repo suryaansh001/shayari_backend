@@ -1,6 +1,6 @@
-import { connectDB } from "../../../_lib/db.js";
-import Shayari from "../../../_lib/models/Shayari.js";
-import { authenticateToken } from "../../../_lib/auth.js";
+import { connectDB } from "../../_lib/db.js";
+import Shayari from "../../_lib/models/Shayari.js";
+import { authenticateToken } from "../../_lib/auth.js";
 
 export default async function handler(req, res) {
   try {
