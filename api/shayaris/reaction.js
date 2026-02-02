@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { id } = req.query;
+    const { id } = req.body;
     const { emoji } = req.body;
 
     await connectDB();
