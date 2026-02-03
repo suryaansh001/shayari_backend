@@ -1,6 +1,6 @@
 import { connectDB } from "../../_lib/db.js";
 import Shayari from "../../_lib/models/Shayari.js";
-import { authenticateToken } from "../../_lib/auth.js";
+import { verifyToken } from "../../_lib/auth.js";
 
 export default async function handler(req, res) {
   // Handle CORS
@@ -25,8 +25,35 @@ export default async function handler(req, res) {
       return res.status(401).json({ message: "No token provided" });
     }
 
-    const shayaris = await Shayari.find().sort({ createdAt: -1 });
-    res.json(shayaris);
+    const decoded = verifyToken(token);
+    if (!decoded) {
+      return res.status(403).json({ message: "Invalid token" });
+    }
+
+    if (req.method === "GET") {
+      // Get all shayaris
+      const shayaris = await Shayari.find().sort({ createdAt: -1 });
+      return res.json(shayaris);
+    } else if (req.method === "POST") {
+      // Create new shayari
+      const { title, content, moodTags, isPublic } = req.body;
+
+      if (!title || !content) {
+        return res.status(400).json({ message: "Title and content required" });
+      }
+
+      const shayari = new Shayari({
+        title,
+        content,
+        moodTags: moodTags || [],
+        isPublic: isPublic !== undefined ? isPublic : true,
+      });
+
+      await shayari.save();
+      return res.status(201).json(shayari);
+    } else {
+      return res.status(405).json({ message: "Method not allowed" });
+    }
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
