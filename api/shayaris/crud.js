@@ -49,8 +49,11 @@ export default async function handler(req, res) {
       return res.status(201).json(shayari);
     } else if (req.method === "PUT") {
       // Update
-      const { id } = req.query;
-      const { title, content, moodTags, isPublic } = req.body;
+      const { id, title, content, moodTags, isPublic } = req.body;
+
+      if (!id) {
+        return res.status(400).json({ message: "ID is required" });
+      }
 
       const shayari = await Shayari.findByIdAndUpdate(
         id,
@@ -71,7 +74,11 @@ export default async function handler(req, res) {
       return res.json(shayari);
     } else if (req.method === "DELETE") {
       // Delete
-      const { id } = req.query;
+      const { id } = req.body;
+
+      if (!id) {
+        return res.status(400).json({ message: "ID is required" });
+      }
 
       const shayari = await Shayari.findByIdAndDelete(id);
 
