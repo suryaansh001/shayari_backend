@@ -42,7 +42,7 @@ export default async function handler(req, res) {
         title,
         content,
         moodTags: moodTags || [],
-        isPublic: isPublic || false,
+        isPublic: isPublic !== undefined ? isPublic : true,
       });
 
       await shayari.save();
