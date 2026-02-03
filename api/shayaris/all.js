@@ -51,6 +51,46 @@ export default async function handler(req, res) {
 
       await shayari.save();
       return res.status(201).json(shayari);
+    } else if (req.method === "PUT") {
+      // Update shayari
+      const { id, title, content, moodTags, isPublic } = req.body;
+
+      if (!id) {
+        return res.status(400).json({ message: "ID is required" });
+      }
+
+      const shayari = await Shayari.findByIdAndUpdate(
+        id,
+        {
+          title,
+          content,
+          moodTags,
+          isPublic,
+          updatedAt: new Date(),
+        },
+        { new: true }
+      );
+
+      if (!shayari) {
+        return res.status(404).json({ message: "Shayari not found" });
+      }
+
+      return res.json(shayari);
+    } else if (req.method === "DELETE") {
+      // Delete shayari
+      const { id } = req.body;
+
+      if (!id) {
+        return res.status(400).json({ message: "ID is required" });
+      }
+
+      const shayari = await Shayari.findByIdAndDelete(id);
+
+      if (!shayari) {
+        return res.status(404).json({ message: "Shayari not found" });
+      }
+
+      return res.json({ message: "Shayari deleted successfully" });
     } else {
       return res.status(405).json({ message: "Method not allowed" });
     }
